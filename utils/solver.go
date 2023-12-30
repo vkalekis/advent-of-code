@@ -17,11 +17,18 @@ type Solver struct {
 	available_days map[string]Solution
 }
 
-func NewSolver(day int, part int, reader Reader, logger *zap.SugaredLogger, available_days map[string]Solution) *Solver {
+func NewSolver(day, part int, filepath string, logger *zap.SugaredLogger, available_days map[string]Solution) *Solver {
+	if filepath == "" {
+		filepath = fmt.Sprintf("data/2023/input%s", zfill(strconv.Itoa(day), 2))
+	}
+
+	fr := NewFileReader(filepath)
+	go fr.Read()
+
 	return &Solver{
 		day:            day,
 		part:           part,
-		reader:         reader,
+		reader:         fr,
 		logger:         logger,
 		available_days: available_days,
 	}
@@ -43,5 +50,4 @@ func (s *Solver) Solve() error {
 	} else {
 		return fmt.Errorf("provided day not in available days map")
 	}
-
 }

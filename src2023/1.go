@@ -32,7 +32,9 @@ func Day_01(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 
 		origLine := line
 		// replace every string number occurence with the equivalent form of:
-		// `firstChar Number lastChar`
+		// `firstChar Number lastChar` : eg. `eight` becomes `e8t`
+		// in order to reuse the same logic from part 1 searching
+		// for digits in the start and end of the string
 		if part == 2 {
 			for num, numRepl := range numsMap {
 				line = strings.Replace(line, num, numRepl, -1)
