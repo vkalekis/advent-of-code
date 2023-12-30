@@ -12,6 +12,7 @@ type Solution func(int, Reader, *zap.SugaredLogger) int
 type Solver struct {
 	day            int
 	part           int
+	filepath       string
 	reader         Reader
 	logger         *zap.SugaredLogger
 	available_days map[string]Solution
@@ -28,6 +29,7 @@ func NewSolver(day, part int, filepath string, logger *zap.SugaredLogger, availa
 	return &Solver{
 		day:            day,
 		part:           part,
+		filepath:       filepath,
 		reader:         fr,
 		logger:         logger,
 		available_days: available_days,
@@ -43,7 +45,7 @@ func (s *Solver) Solve() error {
 	day_specifier := fmt.Sprintf("day_%s", zfill(strconv.Itoa(s.day), 2))
 
 	if solution, ok := s.available_days[day_specifier]; ok {
-		s.logger.Infof("Solving day %d - part %d", s.day, s.part)
+		s.logger.Infof("Solving day %d - part %d using file %s", s.day, s.part, s.filepath)
 		res := solution(s.part, s.reader, s.logger)
 		s.logger.Infof("Resulf of day %d - part %d : %d", s.day, s.part, res)
 		return nil

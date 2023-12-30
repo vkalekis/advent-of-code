@@ -52,5 +52,7 @@ func initDaysMap() {
 	available_days = map[string]utils.Solution{
 		"day_01": src2023.Day_01,
 		"day_02": src2023.Day_02,
+		"day_03": src2023.Day_03,
+		"day_04": src2023.Day_04,
 	}
 }
