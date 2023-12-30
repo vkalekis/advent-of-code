@@ -1,6 +1,4 @@
-package main
-
-// 55093 somehow
+package src2023
 
 import (
 	"strconv"
@@ -8,17 +6,11 @@ import (
 	"unicode"
 
 	"github.com/vkalekis/advent-of-code/utils"
+	"go.uber.org/zap"
 )
 
-func main() {
+func Day_01(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 
-	logger, _ := utils.NewLogger()
-
-	fr := utils.NewFileReader("inputs/input1")
-	// fr := utils.NewDummyReader()
-	go fr.Read()
-
-	doB := true
 	var sum int64
 	numsMap := map[string]string{
 		"one":   "o1e",
@@ -36,9 +28,12 @@ func main() {
 	var strRune string
 	var err error
 
-	for line := range fr.StreamCh {
+	for line := range reader.Stream() {
+
 		origLine := line
-		if doB {
+		// replace every string number occurence with the equivalent form of:
+		// `firstChar Number lastChar`
+		if part == 2 {
 			for num, numRepl := range numsMap {
 				line = strings.Replace(line, num, numRepl, -1)
 			}
@@ -47,25 +42,27 @@ func main() {
 		runes := []rune(line)
 
 		var ind int
+		// find first digit
 		for ind = 0; ind < len(runes); ind++ {
 			if unicode.IsDigit(runes[ind]) {
 				strRune = string(runes[ind])
 				intRune, err = strconv.ParseInt(strRune, 10, 64)
 				if err != nil {
 					logger.Errorf("Error while parsing int: %v", err)
-					return
+					return -1
 				}
 				first = intRune
 				break
 			}
 		}
+		// find last digit
 		for ind = len(runes) - 1; ind >= 0; ind-- {
 			if unicode.IsDigit(runes[ind]) {
 				strRune = string(runes[ind])
 				intRune, err = strconv.ParseInt(strRune, 10, 64)
 				if err != nil {
 					logger.Errorf("Error while parsing int: %v", err)
-					return
+					return -1
 				}
 				last = intRune
 				break
@@ -77,5 +74,5 @@ func main() {
 		sum += first*10 + last
 	}
 
-	logger.Infoln(sum)
+	return int(sum)
 }

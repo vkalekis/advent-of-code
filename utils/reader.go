@@ -8,6 +8,7 @@ import (
 
 type Reader interface {
 	Read()
+	Stream() chan string
 }
 
 type FileReader struct {
@@ -38,6 +39,10 @@ func (fr *FileReader) Read() {
 	}
 }
 
+func (fr *FileReader) Stream() chan string {
+	return fr.StreamCh
+}
+
 type DummyReader struct {
 	StreamCh chan string
 	filename string
@@ -54,4 +59,8 @@ func (dr *DummyReader) Read() {
 
 	dr.StreamCh <- "eighteight9dnvcqznjvfpreight"
 
+}
+
+func (dr *DummyReader) Stream() chan string {
+	return dr.StreamCh
 }
