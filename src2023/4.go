@@ -7,15 +7,11 @@ import (
 	"go.uber.org/zap"
 )
 
-func standardizeSpaces(s string) string {
-	return strings.Join(strings.Fields(s), " ")
-}
-
 func parseLine(line string) ([]string, []string) {
 	splittedLine := strings.Split(line, "|")
 
-	winning := strings.Split(standardizeSpaces(splittedLine[0]), " ")[2:]
-	played := strings.Split(standardizeSpaces(splittedLine[1]), " ")
+	winning := strings.Split(utils.StandardizeSpaces(splittedLine[0]), " ")[2:]
+	played := strings.Split(utils.StandardizeSpaces(splittedLine[1]), " ")
 
 	return winning, played
 }

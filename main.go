@@ -16,6 +16,7 @@ func main() {
 	part := flag.Int("part", 1, "1/2: Run first or second part of the solution")
 	level := flag.String("level", "info", "logger debug level")
 	filepath := flag.String("file", "", "read specific filepath instead of the predefined format")
+	example := flag.Bool("example", false, "use the example file")
 	flag.Parse()
 
 	if err := checkArgs(*day, *part, *level); err != nil {
@@ -27,7 +28,7 @@ func main() {
 
 	initDaysMap()
 
-	solver := utils.NewSolver(*day, *part, *filepath, logger, available_days)
+	solver := utils.NewSolver(*day, *part, *filepath, *example, logger, available_days)
 
 	if err := solver.Solve(); err != nil {
 		logger.Errorf("Error during solving: %v", err)
@@ -54,5 +55,9 @@ func initDaysMap() {
 		"day_02": src2023.Day_02,
 		"day_03": src2023.Day_03,
 		"day_04": src2023.Day_04,
+		// "day_05": src2023.Day_05,
+		"day_06": src2023.Day_06,
+		"day_07": src2023.Day_07,
+		"day_08": src2023.Day_08,
 	}
 }
