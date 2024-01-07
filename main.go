@@ -9,6 +9,7 @@ import (
 )
 
 var available_days map[string]utils.Solution
+var solver2023 src2023.Solver2023
 
 func main() {
 
@@ -25,6 +26,8 @@ func main() {
 	}
 
 	logger, _ := utils.NewLogger(*level)
+
+	solver2023 = src2023.NewSolver2023()
 
 	initDaysMap()
 
@@ -51,13 +54,15 @@ func checkArgs(day, part int, level string) error {
 
 func initDaysMap() {
 	available_days = map[string]utils.Solution{
-		"day_01": src2023.Day_01,
-		"day_02": src2023.Day_02,
-		"day_03": src2023.Day_03,
-		"day_04": src2023.Day_04,
-		// "day_05": src2023.Day_05,
-		"day_06": src2023.Day_06,
-		"day_07": src2023.Day_07,
-		"day_08": src2023.Day_08,
+		"day_01": solver2023.Day_01,
+		"day_02": solver2023.Day_02,
+		"day_03": solver2023.Day_03,
+		"day_04": solver2023.Day_04,
+		// // "day_05": src2023.Day_05,
+		"day_06": solver2023.Day_06,
+		"day_07": solver2023.Day_07,
+		"day_08": solver2023.Day_08,
+		"day_09": solver2023.Day_09,
+		"day_10": solver2023.Day_10,
 	}
 }

@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-type Solution func(int, Reader, *zap.SugaredLogger) int
+type Solution func(int, Reader) int
 
 type Solver struct {
 	day            int
@@ -52,7 +52,7 @@ func (s *Solver) Solve() error {
 		s.logger.Infof("Solving day %d - part %d using file %s", s.day, s.part, s.filepath)
 
 		startTime := time.Now()
-		res := solution(s.part, s.reader, s.logger)
+		res := solution(s.part, s.reader)
 		endTime := time.Since(startTime)
 
 		s.logger.Infof("Resulf of day %d - part %d : %d", s.day, s.part, res)

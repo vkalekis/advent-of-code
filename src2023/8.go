@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/vkalekis/advent-of-code/utils"
-	"go.uber.org/zap"
 )
 
 type node struct {
@@ -13,7 +12,7 @@ type node struct {
 	label string
 }
 
-func Day_08(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
+func (s Solver2023) Day_08(part int, reader utils.Reader) int {
 
 	directions := ""
 	nodesMap := make(map[string]node)
@@ -48,22 +47,22 @@ func Day_08(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 
 	startingNodes = []node{nodesMap["AAA"]}
 
-	logger.Debugf("Directions: %s", directions)
-	logger.Debugf("Nodes: %+v", nodesMap)
-	logger.Infof("StartingNodes: %v", startingNodes)
+	utils.Logger.Debugf("Directions: %s", directions)
+	utils.Logger.Debugf("Nodes: %+v", nodesMap)
+	utils.Logger.Infof("StartingNodes: %v", startingNodes)
 
 	found := false
 	steps := 0
 
 	for _, current := range startingNodes {
 
-		logger.Infof("Starting from node %s", current.label)
+		utils.Logger.Infof("Starting from node %s", current.label)
 
 		for !found {
 			for _, runedir := range directions {
 				dir := string(runedir)
 
-				logger.Debugf("Current: %v", current)
+				utils.Logger.Debugf("Current: %v", current)
 
 				switch dir {
 				case "L":
@@ -74,7 +73,7 @@ func Day_08(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 					current = nodesMap[new_node]
 				}
 
-				logger.Infof("Took %s direction and ended up on node %s", dir, current.label)
+				utils.Logger.Infof("Took %s direction and ended up on node %s", dir, current.label)
 
 				if current.label == "ZZZ" {
 					found = true

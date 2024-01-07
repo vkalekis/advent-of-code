@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/vkalekis/advent-of-code/utils"
-	"go.uber.org/zap"
 )
 
 func getCount(round, label string, regex *regexp.Regexp) int {
@@ -18,7 +17,7 @@ func getCount(round, label string, regex *regexp.Regexp) int {
 	return foundVal
 }
 
-func Day_02(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
+func (s Solver2023) Day_02(part int, reader utils.Reader) int {
 	gameIdReg := regexp.MustCompile("Game [0-9]+")
 	redRegex := regexp.MustCompile("[0-9]+ red")
 	greenRegex := regexp.MustCompile("[0-9]+ green")
@@ -46,7 +45,7 @@ func Day_02(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 			greens = getCount(round, " green", greenRegex)
 			blues = getCount(round, " blue", blueRegex)
 
-			logger.Debugf("Reds=%d Greens=%d Blues=%d", reds, greens, blues)
+			utils.Logger.Debugf("Reds=%d Greens=%d Blues=%d", reds, greens, blues)
 			if reds > 12 || greens > 13 || blues > 14 {
 				validGame = false
 				// the min value of each ball color doesn't need to get calculated in part 1 -> stop the loop
@@ -67,14 +66,14 @@ func Day_02(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 
 		}
 
-		logger.Infof("Game: %d - Valid: %v", gameIdInt, validGame)
-		logger.Debugf("Rounds: %v", rounds)
+		utils.Logger.Infof("Game: %d - Valid: %v", gameIdInt, validGame)
+		utils.Logger.Debugf("Rounds: %v", rounds)
 		if validGame {
 			validGameIds += gameIdInt
 		}
 
 		if part == 2 {
-			logger.Debugf("MinReds=%d MinGreens=%d MinBlues=%d", minReds, minGreens, minBlues)
+			utils.Logger.Debugf("MinReds=%d MinGreens=%d MinBlues=%d", minReds, minGreens, minBlues)
 			powers += minReds * minGreens * minBlues
 		}
 

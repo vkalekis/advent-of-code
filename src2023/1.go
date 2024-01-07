@@ -6,10 +6,9 @@ import (
 	"unicode"
 
 	"github.com/vkalekis/advent-of-code/utils"
-	"go.uber.org/zap"
 )
 
-func Day_01(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
+func (s *Solver2023) Day_01(part int, reader utils.Reader) int {
 
 	var sum int64
 	numsMap := map[string]string{
@@ -50,7 +49,7 @@ func Day_01(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				strRune = string(runes[ind])
 				intRune, err = strconv.ParseInt(strRune, 10, 64)
 				if err != nil {
-					logger.Errorf("Error while parsing int: %v", err)
+					utils.Logger.Errorf("Error while parsing int: %v", err)
 					return -1
 				}
 				first = intRune
@@ -63,7 +62,7 @@ func Day_01(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				strRune = string(runes[ind])
 				intRune, err = strconv.ParseInt(strRune, 10, 64)
 				if err != nil {
-					logger.Errorf("Error while parsing int: %v", err)
+					utils.Logger.Errorf("Error while parsing int: %v", err)
 					return -1
 				}
 				last = intRune
@@ -71,7 +70,7 @@ func Day_01(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 			}
 		}
 
-		logger.Debugln(origLine, line, first, last, first*10+last)
+		utils.Logger.Debugln(origLine, line, first, last, first*10+last)
 
 		sum += first*10 + last
 	}

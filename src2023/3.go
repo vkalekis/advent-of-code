@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/vkalekis/advent-of-code/utils"
-	"go.uber.org/zap"
 )
 
 type Number struct {
@@ -61,7 +60,7 @@ func locatePositions(reader utils.Reader, numReg, symbReg *regexp.Regexp) ([]Num
 	return numbers, symbols
 }
 
-func Day_03(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
+func (s Solver2023) Day_03(part int, reader utils.Reader) int {
 
 	numReg := regexp.MustCompile(`[0-9]+`)
 	symbReg := regexp.MustCompile(`[^\w\s.]`)
@@ -69,10 +68,10 @@ func Day_03(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 	numbers, symbols := locatePositions(reader, numReg, symbReg)
 
 	for _, num := range numbers {
-		logger.Debugf("Number: %+v\n", num)
+		utils.Logger.Debugf("Number: %+v\n", num)
 	}
 	for _, symb := range symbols {
-		logger.Debugf("Symbol: %+v\n", symb)
+		utils.Logger.Debugf("Symbol: %+v\n", symb)
 	}
 
 	switch part {

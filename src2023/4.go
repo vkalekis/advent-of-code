@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/vkalekis/advent-of-code/utils"
-	"go.uber.org/zap"
 )
 
 func parseLine(line string) ([]string, []string) {
@@ -16,7 +15,7 @@ func parseLine(line string) ([]string, []string) {
 	return winning, played
 }
 
-func Day_04(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
+func (s Solver2023) Day_04(part int, reader utils.Reader) int {
 
 	switch part {
 
@@ -27,7 +26,7 @@ func Day_04(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 		for line := range reader.Stream() {
 
 			winning, played := parseLine(line)
-			logger.Debugf("Card %d: Winning: %v - Played: %v", cardInd, winning, played)
+			utils.Logger.Debugf("Card %d: Winning: %v - Played: %v", cardInd, winning, played)
 
 			// 0  points for 0 won cards
 			// 1  point  for 1 won card
@@ -59,7 +58,7 @@ func Day_04(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 		for line := range reader.Stream() {
 
 			winning, played := parseLine(line)
-			logger.Debugf("Card %d: Winning: %v - Played: %v", cardInd, winning, played)
+			utils.Logger.Debugf("Card %d: Winning: %v - Played: %v", cardInd, winning, played)
 
 			winCount := 0
 			for _, num := range played {
@@ -90,7 +89,7 @@ func Day_04(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				}
 			}
 
-			logger.Debugf("Card %d: WinCount %d - CardCount: %d", cardInd, winCount, cardCount)
+			utils.Logger.Debugf("Card %d: WinCount %d - CardCount: %d", cardInd, winCount, cardCount)
 
 			cardInd++
 		}

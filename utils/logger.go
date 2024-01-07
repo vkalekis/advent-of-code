@@ -9,6 +9,8 @@ import (
 
 var loggerLevelMap map[string]zapcore.Level
 
+var Logger *zap.SugaredLogger
+
 func initLoggerLevelMap() {
 	loggerLevelMap = make(map[string]zapcore.Level)
 	loggerLevelMap["debug"] = zap.DebugLevel
@@ -33,8 +35,8 @@ func NewLogger(level string) (*zap.SugaredLogger, error) {
 		zapcore.NewCore(consoleEncoder, stdout, level1),
 	)
 
-	logger := zap.New(core)
-	sugar := logger.Sugar()
+	logger_ := zap.New(core)
+	Logger = logger_.Sugar()
 
-	return sugar, nil
+	return Logger, nil
 }

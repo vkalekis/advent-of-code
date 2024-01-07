@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/vkalekis/advent-of-code/utils"
-	"go.uber.org/zap"
 )
 
 var cardTypes []rune
@@ -31,7 +30,7 @@ const (
 	high
 )
 
-func (r *round) parseWinType(part int, logger *zap.SugaredLogger) {
+func (r *round) parseWinType(part int) {
 	cardsCount := make(map[string]int)
 
 	for _, card := range r.h {
@@ -47,7 +46,7 @@ func (r *round) parseWinType(part int, logger *zap.SugaredLogger) {
 	twopairscount := 0
 	threepairscount := 0
 
-	logger.Debugf("CardCount: %v", cardsCount)
+	utils.Logger.Debugf("CardCount: %v", cardsCount)
 
 	// default - worse win scenario
 	wt = high
@@ -90,15 +89,15 @@ func (r *round) parseWinType(part int, logger *zap.SugaredLogger) {
 
 	if jokers > 0 && part == 2 {
 		for j := 0; j < jokers; j++ {
-			r.addJoker(logger)
+			r.addJoker()
 		}
 	}
 
-	logger.Infof("Hand: %v Cards: %+v Win: %v", r.h, cardsCount, r.wt)
+	utils.Logger.Infof("Hand: %v Cards: %+v Win: %v", r.h, cardsCount, r.wt)
 
 }
 
-func (r *round) addJoker(logger *zap.SugaredLogger) {
+func (r *round) addJoker() {
 	var newwt wintype
 	switch r.wt {
 	case high:
@@ -113,7 +112,7 @@ func (r *round) addJoker(logger *zap.SugaredLogger) {
 		newwt = fiveofakind
 	}
 
-	logger.Debugf("Joker: Hand: %v Old wt: %v New wt: %v", r.h, r.wt, newwt)
+	utils.Logger.Debugf("Joker: Hand: %v Old wt: %v New wt: %v", r.h, r.wt, newwt)
 	r.wt = newwt
 }
 
@@ -145,7 +144,7 @@ func (h1 hand) compareHands(h2 hand) bool {
 	return false
 }
 
-func Day_07(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
+func (s Solver2023) Day_07(part int, reader utils.Reader) int {
 
 	switch part {
 	case 1:
@@ -160,7 +159,7 @@ func Day_07(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 		splitLine := strings.Split(utils.StandardizeSpaces(line), " ")
 		bid, err := strconv.Atoi(splitLine[1])
 		if err != nil {
-			logger.Errorf("Error while parsing int: %v", err)
+			utils.Logger.Errorf("Error while parsing int: %v", err)
 			return -1
 		}
 
@@ -169,12 +168,12 @@ func Day_07(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 			bid: bid,
 		}
 
-		r.parseWinType(part, logger)
+		r.parseWinType(part)
 
 		rounds = append(rounds, r)
 	}
 
-	logger.Debugf("Rounds: %+v", rounds)
+	utils.Logger.Debugf("Rounds: %+v", rounds)
 
 	// collect the results on a map with the wintype as the key
 	roundsMap := make(map[wintype][]round)
@@ -193,7 +192,7 @@ func Day_07(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 	rank := 1
 	totalWinnings := 0
 
-	logger.Debugf("Rounds: %+v", roundsMap[6])
+	utils.Logger.Debugf("Rounds: %+v", roundsMap[6])
 
 	for _, wt := range wts {
 		if _, ok := roundsMap[wt]; !ok {
@@ -201,7 +200,7 @@ func Day_07(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 		}
 
 		if len(roundsMap[wt]) == 1 {
-			logger.Debugf("%d * %d = %d", rank, roundsMap[wt][0].bid, rank*roundsMap[wt][0].bid)
+			utils.Logger.Debugf("%d * %d = %d", rank, roundsMap[wt][0].bid, rank*roundsMap[wt][0].bid)
 
 			totalWinnings += rank * roundsMap[wt][0].bid
 			rank++
@@ -211,10 +210,10 @@ func Day_07(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				return roundsMap[wt][i].h.compareHands(roundsMap[wt][j].h)
 			})
 
-			logger.Debugf("Rounds: %+v", roundsMap[wt])
+			utils.Logger.Debugf("Rounds: %+v", roundsMap[wt])
 
 			for _, r := range roundsMap[wt] {
-				logger.Debugf("WT: %v : %d * %d = %d", wt, rank, r.bid, rank*r.bid)
+				utils.Logger.Debugf("WT: %v : %d * %d = %d", wt, rank, r.bid, rank*r.bid)
 				totalWinnings += rank * r.bid
 				rank++
 			}

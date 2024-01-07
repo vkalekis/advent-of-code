@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/vkalekis/advent-of-code/utils"
-	"go.uber.org/zap"
 )
 
 type race struct {
@@ -14,18 +13,18 @@ type race struct {
 	record   int
 }
 
-func bruteforceRace(r race, logger *zap.SugaredLogger) int {
+func bruteforceRace(r race) int {
 	waysToWin := 0
 	foundRecord := false
 
 	for t := 0; t <= r.duration; t++ {
 		dist := t * (r.duration - t)
 		if dist > r.record {
-			logger.Debugf("OVER: Time: %d Distance: %d Record: %d", t, dist, r.record)
+			utils.Logger.Debugf("OVER: Time: %d Distance: %d Record: %d", t, dist, r.record)
 			waysToWin++
 			foundRecord = true
 		} else {
-			logger.Debugf("Time: %d Distance: %d Record: %d", t, dist, r.record)
+			utils.Logger.Debugf("Time: %d Distance: %d Record: %d", t, dist, r.record)
 			if foundRecord {
 				break
 			}
@@ -34,15 +33,15 @@ func bruteforceRace(r race, logger *zap.SugaredLogger) int {
 	return waysToWin
 }
 
-func smartSolveRace(r race, logger *zap.SugaredLogger) int {
+func smartSolveRace(r race) int {
 	determinant := math.Sqrt(float64(r.duration)*float64(r.duration) - 4*float64(r.record))
 	sol1 := (r.duration + int(determinant)) / 2
 	sol2 := (r.duration - int(determinant)) / 2
-	logger.Infof("Sol1=%v Sol2=%v Sol1-Sol2=%v", sol1, sol2, sol1-sol2+1)
+	utils.Logger.Infof("Sol1=%v Sol2=%v Sol1-Sol2=%v", sol1, sol2, sol1-sol2+1)
 	return sol1 - sol2 + 1
 }
 
-func Day_06(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
+func (s Solver2023) Day_06(part int, reader utils.Reader) int {
 
 	switch part {
 	case 1:
@@ -57,7 +56,7 @@ func Day_06(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				for _, strDur := range splitLine[1:] {
 					dur, err := strconv.Atoi(strDur)
 					if err != nil {
-						logger.Errorf("Error while parsing int: %v", err)
+						utils.Logger.Errorf("Error while parsing int: %v", err)
 						return -1
 					}
 					races = append(races, race{
@@ -69,7 +68,7 @@ func Day_06(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				for ind, strDist := range splitLine[1:] {
 					dist, err := strconv.Atoi(strDist)
 					if err != nil {
-						logger.Errorf("Error while parsing int: %v", err)
+						utils.Logger.Errorf("Error while parsing int: %v", err)
 						return -1
 					}
 					races[ind].record = dist
@@ -79,14 +78,14 @@ func Day_06(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 			lineInd++
 		}
 
-		logger.Infof("Races: %+v", races)
+		utils.Logger.Infof("Races: %+v", races)
 
 		totalWaysToWin := 1
 
 		for _, race := range races {
-			waysToWin := bruteforceRace(race, logger)
+			waysToWin := bruteforceRace(race)
 
-			logger.Infof("Race %+v: Ways to win: %d", race, waysToWin)
+			utils.Logger.Infof("Race %+v: Ways to win: %d", race, waysToWin)
 			totalWaysToWin *= waysToWin
 		}
 
@@ -108,7 +107,7 @@ func Day_06(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				}
 				totalDur, err := strconv.Atoi(totalDurStr)
 				if err != nil {
-					logger.Errorf("Error while parsing int: %v", err)
+					utils.Logger.Errorf("Error while parsing int: %v", err)
 					return -1
 				}
 				r = race{
@@ -122,7 +121,7 @@ func Day_06(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 				}
 				totalDist, err := strconv.Atoi(totalDistStr)
 				if err != nil {
-					logger.Errorf("Error while parsing int: %v", err)
+					utils.Logger.Errorf("Error while parsing int: %v", err)
 					return -1
 				}
 				r.record = totalDist
@@ -131,10 +130,10 @@ func Day_06(part int, reader utils.Reader, logger *zap.SugaredLogger) int {
 			lineInd++
 		}
 
-		logger.Infof("Race: %+v", r)
+		utils.Logger.Infof("Race: %+v", r)
 
-		// waysToWin := bruteforceRace(r, logger)
-		waysToWin := smartSolveRace(r, logger)
+		// waysToWin := bruteforceRace(r)
+		waysToWin := smartSolveRace(r)
 
 		return waysToWin
 	default:
