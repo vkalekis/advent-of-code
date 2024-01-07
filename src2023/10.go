@@ -13,12 +13,9 @@ type neighbor struct {
 	labels []string
 }
 
-type coordinates10 struct {
-	row, col int
-}
 type node10 struct {
 	label      string
-	coords     coordinates10
+	coords     utils.Coordinates
 	n, s, e, w *node10
 	visited    bool
 	dist       int
@@ -125,9 +122,9 @@ func (cur *node10) lookupneighbors(lines map[int][]string, visitedCoords map[str
 
 			neigh := &node10{
 				label: lines[nrow][ncol],
-				coords: coordinates10{
-					row: row,
-					col: col,
+				coords: utils.Coordinates{
+					Row: row,
+					Col: col,
 				},
 			}
 			utils.Logger.Infof(">>>>>> Here: %v (%v,%v) (%v,%v) %v -> %v", dir, row, col, nrow, ncol, cur.label, neigh.label)
@@ -187,10 +184,10 @@ func (cur *node10) lookupneighbors(lines map[int][]string, visitedCoords map[str
 	}
 }
 
-func buildGraph(lines map[int][]string, maxRows, maxCols int) (map[string]*node10, map[string]interface{}, coordinates10) {
+func buildGraph(lines map[int][]string, maxRows, maxCols int) (map[string]*node10, map[string]interface{}, utils.Coordinates) {
 	visitedCoords := make(map[string]*node10, 0)
 	grounds := make(map[string]interface{})
-	var scoordinates coordinates10
+	var scoordinates utils.Coordinates
 
 	for row := 0; row < maxRows-1; row++ {
 		line := lines[row]
@@ -202,17 +199,17 @@ func buildGraph(lines map[int][]string, maxRows, maxCols int) (map[string]*node1
 				continue
 			}
 			if c == "S" {
-				scoordinates = coordinates10{
-					row: row,
-					col: col,
+				scoordinates = utils.Coordinates{
+					Row: row,
+					Col: col,
 				}
 			}
 
 			cur := &node10{
 				label: c,
-				coords: coordinates10{
-					row: row,
-					col: col,
+				coords: utils.Coordinates{
+					Row: row,
+					Col: col,
 				},
 			}
 
@@ -261,7 +258,7 @@ func (root *node10) do_bfs() int {
 
 	for !q.IsEmpty() {
 		n, ok := q.Dequeue()
-		utils.Logger.Debugf("Currently on: (%v,%v) %p %+v", n.coords.row, n.coords.col, n, n)
+		utils.Logger.Debugf("Currently on: (%v,%v) %p %+v", n.coords.Row, n.coords.Col, n, n)
 
 		if n.dist > maxDist {
 			maxDist = n.dist
@@ -426,8 +423,8 @@ func (s Solver2023) Day_10(part int, reader utils.Reader) int {
 
 	visitedCoords, grounds, scoordinates := buildGraph(lines, maxRows, maxCols)
 
-	srow = scoordinates.row
-	scol = scoordinates.col
+	srow = scoordinates.Row
+	scol = scoordinates.Col
 
 	utils.Logger.Infof("S is here: (%v,%v) and is: %v",
 		srow, scol, visitedCoords[fmt.Sprintf("%v-%v", srow, scol)].getSSymbol())
@@ -437,7 +434,7 @@ func (s Solver2023) Day_10(part int, reader utils.Reader) int {
 	// output map to file
 	output := make(map[string]interface{})
 	for _, v := range visitedCoords {
-		output[fmt.Sprintf("%d-%d", v.coords.row, v.coords.col)] = v.dist
+		output[fmt.Sprintf("%d-%d", v.coords.Row, v.coords.Col)] = v.dist
 	}
 	if err := utils.WriteMapToFile(output, "outputs/output10.json"); err != nil {
 		utils.Logger.Errorf("Could not write output to file %s: %v", "output10.json", err)
@@ -464,9 +461,9 @@ func (s Solver2023) Day_10(part int, reader utils.Reader) int {
 
 		for _, v := range visitedCoords {
 			if !v.visited {
-				countL, countR := loc(visitedCoords, v.coords.row, v.coords.col, maxRows, maxCols)
+				countL, countR := loc(visitedCoords, v.coords.Row, v.coords.Col, maxRows, maxCols)
 				if countL%2 == 1 && countR%2 == 1 {
-					utils.Logger.Infof("%v %v    %v %v", v.coords.row, v.coords, countL, countR)
+					utils.Logger.Infof("%v %v    %v %v", v.coords.Row, v.coords, countL, countR)
 					total++
 				}
 			}
