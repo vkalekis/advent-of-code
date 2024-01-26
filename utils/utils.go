@@ -12,6 +12,13 @@ type Coordinates struct {
 	Row, Col int
 }
 
+func NewCoordinates(row, col int) Coordinates {
+	return Coordinates{
+		Row: row,
+		Col: col,
+	}
+}
+
 func (coords Coordinates) IsValid(maxRows, maxCols int) bool {
 	if coords.Row < 0 || coords.Row >= maxRows {
 		return false

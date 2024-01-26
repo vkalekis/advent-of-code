@@ -121,11 +121,8 @@ func (cur *node10) lookupneighbors(lines map[int][]string, visitedCoords map[str
 			}
 
 			neigh := &node10{
-				label: lines[nrow][ncol],
-				coords: utils.Coordinates{
-					Row: row,
-					Col: col,
-				},
+				label:  lines[nrow][ncol],
+				coords: utils.NewCoordinates(row, col),
 			}
 			utils.Logger.Infof(">>>>>> Here: %v (%v,%v) (%v,%v) %v -> %v", dir, row, col, nrow, ncol, cur.label, neigh.label)
 			utils.Logger.Infof(">>>>>> Here: %v (%v,%v) (%v,%v) %p %p", dir, row, col, nrow, ncol, cur, neigh)
@@ -199,18 +196,12 @@ func buildGraph(lines map[int][]string, maxRows, maxCols int) (map[string]*node1
 				continue
 			}
 			if c == "S" {
-				scoordinates = utils.Coordinates{
-					Row: row,
-					Col: col,
-				}
+				scoordinates = utils.NewCoordinates(row, col)
 			}
 
 			cur := &node10{
-				label: c,
-				coords: utils.Coordinates{
-					Row: row,
-					Col: col,
-				},
+				label:  c,
+				coords: utils.NewCoordinates(row, col),
 			}
 
 			if _, ok := visitedCoords[coords]; !ok {

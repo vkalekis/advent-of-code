@@ -154,10 +154,7 @@ func naive_way(lines map[int][]string, maxRows, maxCols int, expansionRate int) 
 		for col := 0; col < maxCols; col++ {
 			if lines[row][col] == "#" {
 
-				galaxiesCoords = append(galaxiesCoords, utils.Coordinates{
-					Row: row,
-					Col: col,
-				})
+				galaxiesCoords = append(galaxiesCoords, utils.NewCoordinates(row, col))
 			}
 		}
 	}
@@ -241,10 +238,7 @@ func (s Solver2023) Day_11(part int, reader utils.Reader) int {
 					}
 				}
 
-				galaxiesCoords = append(galaxiesCoords, utils.Coordinates{
-					Row: grow,
-					Col: gcol,
-				})
+				galaxiesCoords = append(galaxiesCoords, utils.NewCoordinates(grow, gcol))
 
 			}
 		}

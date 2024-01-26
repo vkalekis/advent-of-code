@@ -15,10 +15,7 @@ func transpose(grid map[int]map[utils.Coordinates]string, maxRows, maxCols int) 
 
 		for coord, char := range rowElements {
 			new := coord.Col
-			newCoord := utils.Coordinates{
-				Row: coord.Col,
-				Col: coord.Row,
-			}
+			newCoord := utils.NewCoordinates(coord.Col, coord.Row)
 
 			utils.Logger.Debugln(coord, newCoord, new, char)
 
@@ -42,28 +39,19 @@ func go_up(grid map[int]map[utils.Coordinates]string) {
 			}
 
 			for r := row - 1; r >= 0; r-- {
-				shiftedCoord := utils.Coordinates{
-					Row: r,
-					Col: coord.Col,
-				}
+				shiftedCoord := utils.NewCoordinates(r, coord.Col)
 
 				if grid[r][shiftedCoord] == "#" || grid[r][shiftedCoord] == "O" {
 					utils.Logger.Debugf("Start: %+v R: %d Found: %s at %+v", coord, r, grid[r][shiftedCoord], shiftedCoord)
 					delete(grid[row], coord)
-					grid[r+1][utils.Coordinates{
-						Row: r + 1,
-						Col: coord.Col,
-					}] = "O"
+					grid[r+1][utils.NewCoordinates(r+1, coord.Col)] = "O"
 
 					// utils.Logger.Debugf("%+v", grid[r+1])
 					break
 				} else if r == 0 {
 					utils.Logger.Debugf("Start: %+v Hit top at %+v", coord, shiftedCoord)
 					delete(grid[row], coord)
-					grid[r][utils.Coordinates{
-						Row: r,
-						Col: coord.Col,
-					}] = "O"
+					grid[r][utils.NewCoordinates(r, coord.Col)] = "O"
 				}
 			}
 		}
@@ -79,19 +67,13 @@ func go_down(grid map[int]map[utils.Coordinates]string, maxRows int) {
 			}
 
 			for r := row + 1; r < maxRows; r++ {
-				shiftedCoord := utils.Coordinates{
-					Row: r,
-					Col: coord.Col,
-				}
+				shiftedCoord := utils.NewCoordinates(r, coord.Col)
 
 				if grid[r][shiftedCoord] == "#" || grid[r][shiftedCoord] == "O" {
 					utils.Logger.Debugf("Start: %+v R: %d/%d Found: %s at %+v", coord, r, maxRows, grid[r][shiftedCoord], shiftedCoord)
 					delete(grid[row], coord)
 
-					newCoord := utils.Coordinates{
-						Row: r - 1,
-						Col: coord.Col,
-					}
+					newCoord := utils.NewCoordinates(r-1, coord.Col)
 
 					if _, found := grid[r-1]; !found {
 						grid[r-1] = make(map[utils.Coordinates]string)
@@ -103,10 +85,7 @@ func go_down(grid map[int]map[utils.Coordinates]string, maxRows int) {
 				} else if r == maxRows-1 {
 					utils.Logger.Debugf("Start: %+v Hit top at %+v", coord, shiftedCoord)
 					delete(grid[row], coord)
-					grid[r][utils.Coordinates{
-						Row: r,
-						Col: coord.Col,
-					}] = "O"
+					grid[r][utils.NewCoordinates(r, coord.Col)] = "O"
 				}
 			}
 		}
@@ -121,10 +100,7 @@ func printGrid(grid map[int]map[utils.Coordinates]string, maxRows, maxCols int) 
 		rowElements := grid[row]
 
 		for col := 0; col < maxCols; col++ {
-			coord := utils.Coordinates{
-				Row: row,
-				Col: col,
-			}
+			coord := utils.NewCoordinates(row, col)
 			if char, found := rowElements[coord]; found {
 				rowS += char
 			} else {
@@ -147,10 +123,7 @@ func (s Solver2023) Day_14(part int, reader utils.Reader) int {
 		maxCols = len(strings.Split(line, ""))
 		for col, char := range strings.Split(line, "") {
 			if char != "." {
-				coord := utils.Coordinates{
-					Row: row,
-					Col: col,
-				}
+				coord := utils.NewCoordinates(row, col)
 
 				if _, found := grid[row]; !found {
 					grid[row] = make(map[utils.Coordinates]string)
