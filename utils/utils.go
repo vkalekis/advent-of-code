@@ -3,10 +3,56 @@ package utils
 import (
 	"encoding/json"
 	"os"
+	"strconv"
 	"strings"
 )
 
 // misc helper structs/functions
+
+func ConstructGrid(reader Reader) (map[int][]string, int, int) {
+	grid := make(map[int][]string)
+
+	var maxRows, maxCols, row int
+
+	for line := range reader.Stream() {
+
+		splittedLine := strings.Split(line, "")
+
+		grid[row] = splittedLine
+		row++
+	}
+
+	maxRows = row
+	maxCols = len(grid[0])
+	return grid, maxRows, maxCols
+}
+
+func ConstructIntGrid(reader Reader) (map[int][]int, int, int) {
+	grid := make(map[int][]int)
+
+	var maxRows, maxCols, row int
+
+	for line := range reader.Stream() {
+
+		splittedLine := strings.Split(line, "")
+
+		intLine := make([]int, 0)
+		for _, ch := range splittedLine {
+			intch, err := strconv.Atoi(ch)
+			if err != nil {
+				panic(err)
+			}
+			intLine = append(intLine, intch)
+		}
+
+		grid[row] = intLine
+		row++
+	}
+
+	maxRows = row
+	maxCols = len(grid[0])
+	return grid, maxRows, maxCols
+}
 
 type Coordinates struct {
 	Row, Col int
