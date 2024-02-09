@@ -69,5 +69,6 @@ func initDaysMap() {
 		"day_14": solver2023.Day_14,
 		"day_15": solver2023.Day_15,
 		"day_16": solver2023.Day_16,
+		"day_18": solver2023.Day_18,
 	}
 }

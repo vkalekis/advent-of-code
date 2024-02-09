@@ -172,19 +172,19 @@ func (s Solver2023) Day_14(part int, reader utils.Reader) int {
 		}
 
 		states := make(map[string][]string)
-		dirs := []string{"u", "w", "d", "e"}
+		dirs := []string{"n", "w", "s", "e"}
 
 		for i := 0; i < 1000000000; i++ {
 
 			for _, dir := range dirs {
 				switch dir {
-				case "u":
+				case "n":
 					go_up(grid)
 				case "w":
 					grid, maxRows, maxCols = transpose(grid, maxRows, maxCols)
 					go_up(grid)
 					grid, maxRows, maxCols = transpose(grid, maxRows, maxCols)
-				case "d":
+				case "s":
 					go_down(grid, maxRows)
 				case "e":
 					grid, maxRows, maxCols = transpose(grid, maxRows, maxCols)
@@ -219,13 +219,13 @@ func (s Solver2023) Day_14(part int, reader utils.Reader) int {
 
 						for _, dir := range dirs {
 							switch dir {
-							case "u":
+							case "n":
 								go_up(grid)
 							case "w":
 								grid, maxRows, maxCols = transpose(grid, maxRows, maxCols)
 								go_up(grid)
 								grid, maxRows, maxCols = transpose(grid, maxRows, maxCols)
-							case "d":
+							case "s":
 								go_down(grid, maxRows)
 							case "e":
 								grid, maxRows, maxCols = transpose(grid, maxRows, maxCols)
