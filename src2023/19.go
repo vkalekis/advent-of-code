@@ -122,6 +122,9 @@ func traversePath(graph map[string]map[string]comparison, parents map[string]str
 		"a": make([]interval, 0),
 		"s": make([]interval, 0),
 	})
+
+	prevInverseIntervals := make(map[string][]interval)
+
 	for _, comparison := range comparisons {
 		switch comparison.op {
 		case "<":
@@ -129,12 +132,23 @@ func traversePath(graph map[string]map[string]comparison, parents map[string]str
 				lower: 1,
 				upper: comparison.operandB - 1,
 			})
+			prevInverseIntervals[comparison.operandA] = append(prevInverseIntervals[comparison.operandA], interval{
+				lower: comparison.operandB,
+				upper: 4000,
+			})
 		case ">":
 			i[comparison.operandA] = append(i[comparison.operandA], interval{
-
 				lower: comparison.operandB + 1,
 				upper: 4000,
 			})
+			prevInverseIntervals[comparison.operandA] = append(prevInverseIntervals[comparison.operandA], interval{
+				lower: 1,
+				upper: comparison.operandB,
+			})
+		default:
+			for k, prevIntervals := range prevInverseIntervals {
+				i[k] = append(i[k], prevIntervals...)
+			}
 		}
 
 	}
@@ -172,6 +186,9 @@ func do_dfs(graph map[string]map[string]comparison, start string, visited map[st
 }
 
 func mergeIntervals(intervals []interval) []interval {
+	// [100,125] [40,150] -> [100,125]
+	// [1,1800] [839,4000] -> [839,1800]
+
 	if len(intervals) <= 1 {
 		return intervals
 	}
@@ -190,8 +207,11 @@ func mergeIntervals(intervals []interval) []interval {
 
 		if curr.lower <= lastMerged.upper {
 			// merge overlapping
-			if curr.upper > lastMerged.upper {
+			if curr.upper < lastMerged.upper {
 				lastMerged.upper = curr.upper
+			}
+			if curr.lower > lastMerged.lower {
+				lastMerged.lower = curr.lower
 			}
 		} else {
 			merged = append(merged, curr)
@@ -202,6 +222,17 @@ func mergeIntervals(intervals []interval) []interval {
 }
 
 func (s Solver2023) Day_19(p int, reader utils.Reader) int {
+
+	// x := mergeIntervals([]interval{
+	// 	{
+	// 		lower: 839,
+	// 		upper: 4000,
+	// 	},
+	// 	{lower: 1000,
+	// 		upper: 12800},
+	// })
+	// utils.Logger.Infoln(x)
+	// os.Exit(1)
 
 	workflows, parts := parseLines(reader)
 
@@ -296,14 +327,30 @@ func (s Solver2023) Day_19(p int, reader utils.Reader) int {
 		// utils.Logger.Infof("%+v", i["m"])
 		// utils.Logger.Infof("%+v", mergeIntervals(i["m"]))
 		// return combinations
+
+		count := 0
 		for _, v := range iSlice {
-			utils.Logger.Infof("> %+v", v)
+			localCount := 1
+
+			// utils.Logger.Infof("> %+v", v)
 			for _, label := range []string{"x", "m", "a", "s"} {
 				v[label] = mergeIntervals(v[label])
 			}
 
 			utils.Logger.Infof(">> %+v", v)
+
+			for _, label := range []string{"x", "m", "a", "s"} {
+				if len(v[label]) == 0 {
+					localCount *= 4000
+				} else {
+					localCount *= (v[label][0].upper - v[label][0].lower + 1)
+				}
+			}
+			count += localCount
+
+			utils.Logger.Infof(">> %+v", count)
 		}
+		return count
 	default:
 		//shouldn't reach here
 		return -1
