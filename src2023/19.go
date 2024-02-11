@@ -104,85 +104,45 @@ func parseLines(reader utils.Reader) (map[string]workflow, []part) {
 	return workflows, parts
 }
 
-func traversePath(graph map[string]map[string]comparison, parents map[string]string, start string, iSlice []intervals) []intervals {
-	comparisons := make([]comparison, 0)
+func traversePath(parents map[string]string, start string) []string {
+	path := make([]string, 0)
 	for start != "in" {
 		parent := parents[start]
 		utils.Logger.Debugf(">>> %v %v", start, parent)
 
-		comparisons = append(comparisons, graph[parent][start])
+		path = append(path, start)
 		start = parent
 	}
-
-	utils.Logger.Debugf(">>> %+v", comparisons)
-
-	i := intervals(map[string][]interval{
-		"x": make([]interval, 0),
-		"m": make([]interval, 0),
-		"a": make([]interval, 0),
-		"s": make([]interval, 0),
-	})
-
-	prevInverseIntervals := make(map[string][]interval)
-
-	for _, comparison := range comparisons {
-		switch comparison.op {
-		case "<":
-			i[comparison.operandA] = append(i[comparison.operandA], interval{
-				lower: 1,
-				upper: comparison.operandB - 1,
-			})
-			prevInverseIntervals[comparison.operandA] = append(prevInverseIntervals[comparison.operandA], interval{
-				lower: comparison.operandB,
-				upper: 4000,
-			})
-		case ">":
-			i[comparison.operandA] = append(i[comparison.operandA], interval{
-				lower: comparison.operandB + 1,
-				upper: 4000,
-			})
-			prevInverseIntervals[comparison.operandA] = append(prevInverseIntervals[comparison.operandA], interval{
-				lower: 1,
-				upper: comparison.operandB,
-			})
-		default:
-			for k, prevIntervals := range prevInverseIntervals {
-				i[k] = append(i[k], prevIntervals...)
-			}
-		}
-
-	}
-	iSlice = append(iSlice, i)
-
-	utils.Logger.Infof("-------> %+v", i)
-	return iSlice
-
+	path = append(path, "in")
+	return path
 }
 
-func do_dfs(graph map[string]map[string]comparison, start string, visited map[string]bool, parents map[string]string, iSlice []intervals) []intervals {
+func do_dfs(graph map[string]map[string][]comparison, start string, visited map[string]bool, parents map[string]string, paths [][]string) [][]string {
 	if visited[start] {
-		return iSlice
+		return paths
 	}
 
 	visited[start] = true
 
 	neighbors, found := graph[start]
 	if !found {
-		return iSlice
+		return paths
 	}
 
-	for neighbor, comparison := range neighbors {
+	for neighbor, comparisons := range neighbors {
 		parents[neighbor] = start
-		utils.Logger.Debugf("%s -> %s : comparison %v", start, neighbor, comparison)
-		iSlice = do_dfs(graph, neighbor, visited, parents, iSlice)
+		for _, comparison := range comparisons {
+			utils.Logger.Debugf("%s -> %s : comparison %v", start, neighbor, comparison)
+			paths = do_dfs(graph, neighbor, visited, parents, paths)
 
-		if neighbor == "A" {
-			iSlice = traversePath(graph, parents, neighbor, iSlice)
+			if strings.HasPrefix(neighbor, "A") {
+				paths = append(paths, traversePath(parents, neighbor))
+			}
 		}
 
 	}
 
-	return iSlice
+	return paths
 }
 
 func mergeIntervals(intervals []interval) []interval {
@@ -199,7 +159,7 @@ func mergeIntervals(intervals []interval) []interval {
 
 	merged := []interval{intervals[0]}
 
-	utils.Logger.Debugf("%+v", intervals)
+	// utils.Logger.Debugf("%+v", intervals)
 
 	for i := 1; i < len(intervals); i++ {
 		curr := intervals[i]
@@ -222,17 +182,6 @@ func mergeIntervals(intervals []interval) []interval {
 }
 
 func (s Solver2023) Day_19(p int, reader utils.Reader) int {
-
-	// x := mergeIntervals([]interval{
-	// 	{
-	// 		lower: 839,
-	// 		upper: 4000,
-	// 	},
-	// 	{lower: 1000,
-	// 		upper: 12800},
-	// })
-	// utils.Logger.Infoln(x)
-	// os.Exit(1)
 
 	workflows, parts := parseLines(reader)
 
@@ -296,61 +245,99 @@ func (s Solver2023) Day_19(p int, reader utils.Reader) int {
 		return acceptedPartsFields
 	case 2:
 
-		edges := make(map[string]map[string]comparison)
+		graph := make(map[string]map[string][]comparison)
+
+		aidx := 0
 
 		for _, workflow := range workflows {
 
-			if _, found := edges[workflow.name]; !found {
-				edges[workflow.name] = make(map[string]comparison)
+			if _, found := graph[workflow.name]; !found {
+				graph[workflow.name] = make(map[string][]comparison)
 			}
 
 			for ind := 0; ind < len(workflow.comparisons); ind++ {
-				edges[workflow.name][workflow.comparisons[ind].workflow] = workflow.comparisons[ind]
+				if workflow.comparisons[ind].workflow == "A" {
+					workflow.comparisons[ind].workflow = fmt.Sprintf("A_%d", aidx)
+					aidx++
+				}
+				graph[workflow.name][workflow.comparisons[ind].workflow] = append(graph[workflow.name][workflow.comparisons[ind].workflow], workflow.comparisons[ind])
 			}
 		}
 
-		utils.Logger.Infof("%+v", edges["in"])
+		paths := make([][]string, 0)
+		paths = do_dfs(graph, "in", make(map[string]bool), make(map[string]string), paths)
 
-		iSlice := make([]intervals, 0)
-		iSlice = do_dfs(edges, "in", make(map[string]bool), make(map[string]string), iSlice)
+		combinations := 0
 
-		// combinations := 1
-		// for _, label := range []string{"x", "m", "a", "s"} {
-		// 	intervals := mergeIntervals(i[label])
+		for _, path := range paths {
 
-		// 	utils.Logger.Debugf("At %s : %+v", label, intervals)
-		// 	for _, interval := range intervals {
-		// 		combinations *= interval.upper - interval.lower + 1
-		// 	}
+			i := intervals(map[string][]interval{
+				"x": make([]interval, 0),
+				"m": make([]interval, 0),
+				"a": make([]interval, 0),
+				"s": make([]interval, 0),
+			})
 
-		// }
-		// utils.Logger.Infof("%+v", i["m"])
-		// utils.Logger.Infof("%+v", mergeIntervals(i["m"]))
-		// return combinations
+			utils.Logger.Infof("Path: %+v", path)
 
-		count := 0
-		for _, v := range iSlice {
-			localCount := 1
+			for ind := 1; ind < len(path); ind++ {
+				prevWorkflow := workflows[path[ind]].comparisons
+				utils.Logger.Debugf("Prev: %+v %s %s", prevWorkflow, path[ind-1], path[ind])
+				for compInd := 0; compInd < len(prevWorkflow); compInd++ {
+					comparison := prevWorkflow[compInd]
 
-			// utils.Logger.Infof("> %+v", v)
-			for _, label := range []string{"x", "m", "a", "s"} {
-				v[label] = mergeIntervals(v[label])
-			}
-
-			utils.Logger.Infof(">> %+v", v)
-
-			for _, label := range []string{"x", "m", "a", "s"} {
-				if len(v[label]) == 0 {
-					localCount *= 4000
-				} else {
-					localCount *= (v[label][0].upper - v[label][0].lower + 1)
+					if prevWorkflow[compInd].workflow != path[ind-1] {
+						switch comparison.op {
+						case "<":
+							i[comparison.operandA] = append(i[comparison.operandA], interval{
+								lower: comparison.operandB,
+								upper: 4000,
+							})
+						case ">":
+							i[comparison.operandA] = append(i[comparison.operandA], interval{
+								lower: 1,
+								upper: comparison.operandB,
+							})
+						}
+					} else {
+						switch comparison.op {
+						case "<":
+							i[comparison.operandA] = append(i[comparison.operandA], interval{
+								lower: 1,
+								upper: comparison.operandB - 1,
+							})
+						case ">":
+							i[comparison.operandA] = append(i[comparison.operandA], interval{
+								lower: comparison.operandB + 1,
+								upper: 4000,
+							})
+						case "":
+						}
+						break
+					}
 				}
 			}
-			count += localCount
 
-			utils.Logger.Infof(">> %+v", count)
+			utils.Logger.Debugf("Intervals: %+v", i)
+
+			localCombinations := 1
+			for _, label := range []string{"x", "m", "a", "s"} {
+				intervals := mergeIntervals(i[label])
+
+				utils.Logger.Debugf("At %s : %+v", label, intervals)
+
+				if len(intervals) == 0 {
+					localCombinations *= 4000
+				} else {
+					localCombinations *= (intervals[0].upper - intervals[0].lower + 1)
+				}
+
+			}
+			combinations += localCombinations
+			utils.Logger.Debugf("Combinations %d : %d", localCombinations, combinations)
 		}
-		return count
+
+		return combinations
 	default:
 		//shouldn't reach here
 		return -1
