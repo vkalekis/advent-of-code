@@ -11,6 +11,7 @@ import (
 type Solution func(int, Reader) int
 
 type Solver struct {
+	year           int
 	day            int
 	part           int
 	filepath       string
@@ -19,9 +20,9 @@ type Solver struct {
 	available_days map[string]Solution
 }
 
-func NewSolver(day, part int, filepath string, example bool, logger *zap.SugaredLogger, available_days map[string]Solution) *Solver {
+func NewSolver(year, day, part int, filepath string, example bool, logger *zap.SugaredLogger, available_days map[string]Solution) *Solver {
 	if filepath == "" {
-		filepath = fmt.Sprintf("data/2023/input%s", zfill(strconv.Itoa(day), 2))
+		filepath = fmt.Sprintf("data/%d/input%s", year, zfill(strconv.Itoa(day), 2))
 	}
 	if example {
 		filepath = fmt.Sprintf("%s_example", filepath)
@@ -31,6 +32,7 @@ func NewSolver(day, part int, filepath string, example bool, logger *zap.Sugared
 	go fr.Read()
 
 	return &Solver{
+		year:           year,
 		day:            day,
 		part:           part,
 		filepath:       filepath,
@@ -46,7 +48,7 @@ func zfill(input string, width int) string {
 
 func (s *Solver) Solve() error {
 
-	day_specifier := fmt.Sprintf("day_%s", zfill(strconv.Itoa(s.day), 2))
+	day_specifier := fmt.Sprintf("%d_%s", s.year, zfill(strconv.Itoa(s.day), 2))
 
 	if solution, ok := s.available_days[day_specifier]; ok {
 		s.logger.Infof("Solving day %d - part %d using file %s", s.day, s.part, s.filepath)
