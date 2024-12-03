@@ -2,7 +2,6 @@ package utils
 
 import (
 	"bufio"
-	"log"
 	"os"
 )
 
@@ -28,7 +27,7 @@ func (fr *FileReader) Read() {
 
 	file, err := os.Open(fr.filename)
 	if err != nil {
-		log.Fatal(err)
+		Logger.Fatalln(err)
 	}
 	defer file.Close()
 
