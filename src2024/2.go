@@ -7,14 +7,17 @@ import (
 	"github.com/vkalekis/advent-of-code/utils"
 )
 
-func isReportSafe(report []int) bool {
+type report []int
+
+func (r report) isSafe() bool {
 	mode := ""
 
-	for i := 0; i < len(report)-1; i++ {
+	for i := 0; i < len(r)-1; i++ {
 		if mode == "" {
-			if report[i+1] > report[i] {
+			// get starting mode from first two elements
+			if r[i+1] > r[i] {
 				mode = "asc"
-			} else if report[i+1] < report[i] {
+			} else if r[i+1] < r[i] {
 				mode = "desc"
 			} else {
 				// not a valid mode
@@ -25,9 +28,9 @@ func isReportSafe(report []int) bool {
 
 		var diff int
 		if mode == "asc" {
-			diff = report[i+1] - report[i]
+			diff = r[i+1] - r[i]
 		} else if mode == "desc" {
-			diff = report[i] - report[i+1]
+			diff = r[i] - r[i+1]
 		}
 
 		if !(diff >= 1 && diff <= 3) {
@@ -40,7 +43,7 @@ func isReportSafe(report []int) bool {
 }
 
 func (s *Solver2024) Day_02(part int, reader utils.Reader) int {
-	reports := make([][]int, 0)
+	reports := make([]report, 0)
 	for line := range reader.Stream() {
 
 		utils.Logger.Debugln(line)
@@ -53,31 +56,30 @@ func (s *Solver2024) Day_02(part int, reader utils.Reader) int {
 		}
 		utils.Logger.Debugln(levels)
 
-		reports = append(reports, levels)
+		reports = append(reports, report(levels))
 	}
 
 	utils.Logger.Infoln(len(reports))
 
 	safeCount := 0
-	for _, report := range reports {
+	for _, r := range reports {
 		switch part {
 		case 1:
-			if isReportSafe(report) {
+			if r.isSafe() {
 				safeCount++
 			}
 		case 2:
-
-			if !isReportSafe(report) {
+			if !r.isSafe() {
 				// brute force, start removing each element and check if the subreport is safe
 				found := false
-				for i := 0; i < len(report); i++ {
-					subReport := make([]int, len(report))
-					copy(subReport, report)
+				for i := 0; i < len(r); i++ {
+					subReport := make(report, len(r))
+					copy(subReport, r)
 
 					subReport = append(subReport[:i], subReport[i+1:]...)
 
 					// utils.Logger.Infoln("Original:", report, "Modified:", subReport)
-					if isReportSafe(subReport) {
+					if subReport.isSafe() {
 						found = true
 						break
 					}

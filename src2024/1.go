@@ -34,8 +34,8 @@ func (s *Solver2024) Day_01(part int, reader utils.Reader) int {
 		return -1
 	}
 
-	utils.Logger.Infof("LList: %v", llist)
-	utils.Logger.Infof("RList: %v", rlist)
+	utils.Logger.Debugf("LList: %v", llist)
+	utils.Logger.Debugf("RList: %v", rlist)
 
 	switch part {
 	case 1:
@@ -46,8 +46,8 @@ func (s *Solver2024) Day_01(part int, reader utils.Reader) int {
 			return rlist[i] < rlist[j]
 		})
 
-		utils.Logger.Infof("Sorted LList: %v", llist)
-		utils.Logger.Infof("Sorted RList: %v", rlist)
+		utils.Logger.Debugf("Sorted LList: %v", llist)
+		utils.Logger.Debugf("Sorted RList: %v", rlist)
 
 		dist := 0.0
 		for i := range len(llist) {
@@ -65,7 +65,7 @@ func (s *Solver2024) Day_01(part int, reader utils.Reader) int {
 			rlistFrequencies[id]++
 		}
 
-		utils.Logger.Infof("RList frequencies: %+v", rlistFrequencies)
+		utils.Logger.Debugf("RList frequencies: %+v", rlistFrequencies)
 
 		similarity := 0
 		for _, id := range llist {
