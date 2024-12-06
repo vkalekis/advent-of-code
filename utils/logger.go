@@ -35,7 +35,7 @@ func NewLogger(level string) (*zap.SugaredLogger, error) {
 		zapcore.NewCore(consoleEncoder, stdout, level1),
 	)
 
-	logger_ := zap.New(core)
+	logger_ := zap.New(core, zap.AddCaller())
 	Logger = logger_.Sugar()
 
 	return Logger, nil
