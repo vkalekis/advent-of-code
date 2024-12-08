@@ -1,6 +1,15 @@
 package utils
 
+import "fmt"
+
 // misc helper structs/functions
+
+const (
+	Up = iota
+	Down
+	Left
+	Right
+)
 
 type Coordinates struct {
 	Row, Col int
@@ -13,61 +22,113 @@ func NewCoordinates(row, col int) Coordinates {
 	}
 }
 
-func (coords Coordinates) IsValid(maxRows, maxCols int) bool {
-	if coords.Row < 0 || coords.Row >= maxRows {
+func (c Coordinates) String() string {
+	return fmt.Sprintf("(%d,%d)", c.Row, c.Col)
+}
+
+func (c Coordinates) IsValid(maxRows, maxCols int) bool {
+	if c.Row < 0 || c.Row >= maxRows {
 		return false
 	}
-	if coords.Col < 0 || coords.Col >= maxCols {
+	if c.Col < 0 || c.Col >= maxCols {
 		return false
 	}
 	return true
 }
 
-func (coords Coordinates) GetNeighbors(maxRows, maxCols int) []Coordinates {
+func (c Coordinates) GetNeighbors(maxRows, maxCols int) []Coordinates {
 	neighbors := make([]Coordinates, 0)
-	if !coords.IsValid(maxRows, maxCols) {
+	if !c.IsValid(maxRows, maxCols) {
 		return neighbors
 	}
 
-	if coords.Row > 0 {
+	if c.Row > 0 {
 		neighbors = append(neighbors, Coordinates{
-			Row: coords.Row - 1,
-			Col: coords.Col,
+			Row: c.Row - 1,
+			Col: c.Col,
 		})
 	}
-	if coords.Col > 0 {
+	if c.Col > 0 {
 		neighbors = append(neighbors, Coordinates{
-			Row: coords.Row,
-			Col: coords.Col - 1,
+			Row: c.Row,
+			Col: c.Col - 1,
 		})
 	}
-	if coords.Row < maxRows-1 {
+	if c.Row < maxRows-1 {
 		neighbors = append(neighbors, Coordinates{
-			Row: coords.Row + 1,
-			Col: coords.Col,
+			Row: c.Row + 1,
+			Col: c.Col,
 		})
 	}
-	if coords.Col < maxCols-1 {
+	if c.Col < maxCols-1 {
 		neighbors = append(neighbors, Coordinates{
-			Row: coords.Row,
-			Col: coords.Col + 1,
+			Row: c.Row,
+			Col: c.Col + 1,
 		})
 	}
 
 	return neighbors
 }
 
-func (coords Coordinates) Shift(dir string, steps int) Coordinates {
+func (c Coordinates) Shift(dir string, steps int) Coordinates {
 	switch dir {
 	case "n":
-		return NewCoordinates(coords.Row-steps, coords.Col)
+		return Coordinates{c.Row - steps, c.Col}
 	case "s":
-		return NewCoordinates(coords.Row+steps, coords.Col)
+		return Coordinates{c.Row + steps, c.Col}
 	case "w":
-		return NewCoordinates(coords.Row, coords.Col-steps)
+		return Coordinates{c.Row, c.Col - steps}
 	case "e":
-		return NewCoordinates(coords.Row, coords.Col+steps)
+		return Coordinates{c.Row, c.Col + steps}
 	default:
-		return coords
+		return c
 	}
+}
+
+func areEqual(c1, c2 Coordinates) bool {
+	return c1.Row == c2.Row && c1.Col == c2.Col
+}
+
+func GetIntermediateCoords(start, end Coordinates) []Coordinates {
+	intermediate := make([]Coordinates, 0)
+	if start.Row == end.Row {
+		if start.Col > end.Col {
+			// move left
+			for col := start.Col; col >= end.Col; col-- {
+				intermediate = append(intermediate, Coordinates{Row: start.Row, Col: col})
+			}
+		} else {
+			// move right
+			for col := start.Col; col <= end.Col; col++ {
+				intermediate = append(intermediate, Coordinates{Row: start.Row, Col: col})
+			}
+		}
+	} else if start.Col == end.Col {
+		if start.Row > end.Row {
+			// move up
+			for row := start.Row; row >= end.Row; row-- {
+				intermediate = append(intermediate, Coordinates{Row: row, Col: start.Col})
+			}
+		} else {
+			// move down
+			for row := start.Row; row <= end.Row; row++ {
+				intermediate = append(intermediate, Coordinates{Row: row, Col: start.Col})
+			}
+		}
+	}
+	return intermediate
+}
+
+func RemoveDuplicates(coords []Coordinates) []Coordinates {
+	seen := make(map[Coordinates]bool)
+	var unique []Coordinates
+
+	for _, coord := range coords {
+		if !seen[coord] {
+			seen[coord] = true
+			unique = append(unique, coord)
+		}
+	}
+
+	return unique
 }
