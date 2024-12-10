@@ -109,7 +109,7 @@ func getGuardPath(grid [][]string, guardCoords utils.Coordinates, dir int) []uti
 	for !hitBound {
 		hitBound, v = moveGuard(grid, &dir, &guardCoords)
 
-		utils.Logger.Infof("Dir: %s Guard: %s", dir, guardCoords.String())
+		utils.Logger.Infof("Dir: %s Guard: %s", dir, guardCoords)
 
 		visited = append(visited, v...)
 	}
