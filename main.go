@@ -4,9 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/vkalekis/advent-of-code/src2023"
-	"github.com/vkalekis/advent-of-code/src2024"
-	"github.com/vkalekis/advent-of-code/utils"
+	"github.com/vkalekis/advent-of-code/pkg/logger"
+	"github.com/vkalekis/advent-of-code/pkg/utils"
+	"github.com/vkalekis/advent-of-code/src/src2023"
+	"github.com/vkalekis/advent-of-code/src/src2024"
 )
 
 var available_days map[string]utils.Solution
@@ -28,14 +29,14 @@ func main() {
 		return
 	}
 
-	logger, _ := utils.NewLogger(*level)
+	_ = logger.NewLogger(*level)
 
 	solver2023 = src2023.NewSolver2023()
 	solver2024 = src2024.NewSolver2024()
 
 	initDaysMap()
 
-	solver := utils.NewSolver(*year, *day, *part, *filepath, *example, logger, available_days)
+	solver := utils.NewSolver(*year, *day, *part, *filepath, *example, available_days)
 
 	if err := solver.Solve(); err != nil {
 		logger.Errorf("Error during solving: %v", err)
