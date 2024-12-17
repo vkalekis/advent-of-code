@@ -29,7 +29,7 @@ func convXMASWorker(inCh <-chan utils.Row, outCh chan int) {
 }
 
 // overkill but, eh, it was similar to the first part!
-func conv2DXMASWorker(inCh <-chan utils.Array, outCh chan int) {
+func conv2DXMASWorker(inCh <-chan utils.Grid, outCh chan int) {
 	count := 0
 	for a := range inCh {
 		for i := 0; i < len(a)-2; i++ {
@@ -54,7 +54,7 @@ func conv2DXMASWorker(inCh <-chan utils.Array, outCh chan int) {
 }
 
 func (s *Solver2024) Day_04(part int, reader utils.Reader) int {
-	var a utils.Array
+	var a utils.Grid
 
 	for line := range reader.Stream() {
 		logger.Debugln(line)
@@ -84,7 +84,7 @@ func (s *Solver2024) Day_04(part int, reader utils.Reader) int {
 
 		close(inCh)
 	case 2:
-		inCh := make(chan utils.Array)
+		inCh := make(chan utils.Grid)
 
 		go conv2DXMASWorker(inCh, outCh)
 

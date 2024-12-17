@@ -1,8 +1,6 @@
 package src2024
 
 import (
-	"strings"
-
 	"github.com/vkalekis/advent-of-code/pkg/logger"
 	"github.com/vkalekis/advent-of-code/pkg/utils"
 )
@@ -13,16 +11,6 @@ type node struct {
 }
 
 type graph map[node][]node
-
-func generateGrid(reader utils.Reader) [][]string {
-	var grid [][]string
-
-	for line := range reader.Stream() {
-		logger.Debugln(line)
-		grid = append(grid, strings.Split(line, ""))
-	}
-	return grid
-}
 
 func generateGraph(grid [][]string) graph {
 
@@ -87,7 +75,7 @@ func dfs(g graph, start node, visited map[node]bool, score *int, considerVisited
 
 func (s *Solver2024) Day_10(part int, reader utils.Reader) int {
 
-	grid := generateGrid(reader)
+	grid := utils.GenerateGrid(reader)
 	g := generateGraph(grid)
 
 	for k, v := range g {
