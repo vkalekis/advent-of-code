@@ -7,9 +7,14 @@ import (
 	"github.com/vkalekis/advent-of-code/pkg/utils"
 )
 
-func (s *Solver2024) Day_05(part int, reader utils.Reader) int {
-	orderRules := make(map[int][]int)
-	updates := make([][]int, 0)
+type update []int
+type rules map[int][]int
+
+func constructUpdatesAndRules(reader utils.Reader) ([]update, rules) {
+	// pageX before pageY
+	rules := make(rules)
+
+	updates := make([]update, 0)
 
 	for line := range reader.Stream() {
 		logger.Debugln(line)
@@ -22,11 +27,10 @@ func (s *Solver2024) Day_05(part int, reader utils.Reader) int {
 			page1 := utils.ToInt(parts[0])
 			page2 := utils.ToInt(parts[1])
 
-			if _, found := orderRules[page1]; !found {
-				orderRules[page1] = make([]int, 0)
+			if _, found := rules[page1]; !found {
+				rules[page1] = make([]int, 0)
 			}
-			orderRules[page1] = append(orderRules[page1], page2)
-
+			rules[page1] = append(rules[page1], page2)
 		} else if len(line) == 0 {
 			// separator
 			continue
@@ -41,17 +45,88 @@ func (s *Solver2024) Day_05(part int, reader utils.Reader) int {
 		}
 	}
 
-	logger.Infof("%+v", orderRules)
-	logger.Infof("%+v", updates)
+	return updates, rules
+}
 
-	for _, update := range updates {
-		for i := 0; i < len(update); i++ {
-			for j := i + 1; j < len(update); j++ {
-				if _, found := orderRules[update[i]]; found {
+func (u update) isInOrder(rules rules) bool {
 
+	for i := 0; i < len(u); i++ {
+		if rule, found := rules[u[i]]; found {
+			// logger.Infof("Found: %d Rule:%v", update[i], rule)
+
+			for _, ruleNum := range rule {
+				// update[i] is supposed to be before ruleNum
+				// if we find the ruleNum before update[i] -> rule is not valid
+				// the update sequence is not in order
+				for j := 0; j < i; j++ {
+					if u[j] == ruleNum {
+						// logger.Infof("Found: %d at %d", ruleNum, j)
+						return false
+					}
 				}
 			}
+
 		}
 	}
-	return -1
+
+	return true
+}
+
+func (s *Solver2024) Day_05(part int, reader utils.Reader) int {
+
+	updates, rules := constructUpdatesAndRules(reader)
+
+	logger.Infof("Rules: %+v", rules)
+
+	medianSum := 0
+
+	for _, update := range updates {
+		isInOrder := update.isInOrder(rules)
+
+		logger.Infof("Update: %v InOrder: %t", update, isInOrder)
+
+		switch part {
+		case 1:
+			if isInOrder {
+				medianSum += update[len(update)/2]
+			}
+		case 2:
+			if !isInOrder {
+				// logger.Infof("Update before swap: %v", update)
+
+				swapOnePair := func(update []int) {
+					for i := 0; i < len(update); i++ {
+						if rule, found := rules[update[i]]; found {
+							// logger.Infof("Found: %d Rule:%v", update[i], rule)
+
+							for _, ruleNum := range rule {
+
+								// update[i] is supposed to be before ruleNum
+								// if we find the ruleNum before update[i] -> rule is not valid
+								// the update sequence is not in order, we swap the elements at indexes i,j
+								for j := 0; j < i; j++ {
+									if update[j] == ruleNum {
+										// logger.Infof("Swapping: %d %d", update[i], update[j])
+										update[j] = update[i]
+										update[i] = ruleNum
+										return
+									}
+								}
+							}
+
+						}
+					}
+				}
+
+				for !update.isInOrder(rules) {
+					swapOnePair(update)
+				}
+
+				// logger.Infof("Update after swap: %v", update)
+				medianSum += update[len(update)/2]
+			}
+		}
+
+	}
+	return medianSum
 }

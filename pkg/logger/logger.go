@@ -75,7 +75,7 @@ func NewLogger(level string) error {
 		zapcore.NewCore(consoleEncoder, stdout, level1),
 	)
 
-	logger_ := zap.New(core, zap.AddCaller())
+	logger_ := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 	logger = logger_.Sugar()
 
 	return nil
