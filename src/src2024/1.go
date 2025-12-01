@@ -9,7 +9,7 @@ import (
 	"github.com/vkalekis/advent-of-code/pkg/utils"
 )
 
-func (s *Solver2024) Day_01(part int, reader utils.Reader) int {
+func (s *Solver) Day_01(part int, reader utils.Reader) int {
 
 	llist := make([]int, 0)
 	rlist := make([]int, 0)

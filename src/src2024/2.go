@@ -42,7 +42,7 @@ func (r report) isSafe() bool {
 	return true
 }
 
-func (s *Solver2024) Day_02(part int, reader utils.Reader) int {
+func (s *Solver) Day_02(part int, reader utils.Reader) int {
 	reports := make([]report, 0)
 	for line := range reader.Stream() {
 

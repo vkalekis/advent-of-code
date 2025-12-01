@@ -131,7 +131,7 @@ func constructSystemsOfEquations(reader utils.Reader, conversionError bool) []sy
 	return systemOfEqs
 }
 
-func (s *Solver2024) Day_13(part int, reader utils.Reader) int {
+func (s *Solver) Day_13(part int, reader utils.Reader) int {
 
 	conversionError := false
 	switch part {

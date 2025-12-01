@@ -1,8 +1,8 @@
 package src2024
 
-type Solver2024 struct {
+type Solver struct {
 }
 
-func NewSolver2024() Solver2024 {
-	return Solver2024{}
+func NewSolver() Solver {
+	return Solver{}
 }

@@ -73,7 +73,7 @@ func dfs(g graph, start node, visited map[node]bool, score *int, considerVisited
 	}
 }
 
-func (s *Solver2024) Day_10(part int, reader utils.Reader) int {
+func (s *Solver) Day_10(part int, reader utils.Reader) int {
 
 	grid := utils.GenerateGrid(reader)
 	g := generateGraph(grid)

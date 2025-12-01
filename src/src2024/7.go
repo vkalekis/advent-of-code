@@ -192,7 +192,7 @@ func (eq *equation) goBackWardsRecursive(part, i int, result int, op operation, 
 	}
 }
 
-func (s *Solver2024) Day_07(part int, reader utils.Reader) int {
+func (s *Solver) Day_07(part int, reader utils.Reader) int {
 
 	equations := constructEquations(reader)
 

@@ -144,7 +144,7 @@ func (h1 hand) compareHands(h2 hand) bool {
 	return false
 }
 
-func (s Solver2023) Day_07(part int, reader utils.Reader) int {
+func (s Solver) Day_07(part int, reader utils.Reader) int {
 
 	switch part {
 	case 1:

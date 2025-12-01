@@ -16,7 +16,7 @@ func parseLine(line string) ([]string, []string) {
 	return winning, played
 }
 
-func (s Solver2023) Day_04(part int, reader utils.Reader) int {
+func (s Solver) Day_04(part int, reader utils.Reader) int {
 
 	switch part {
 

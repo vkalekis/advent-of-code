@@ -17,7 +17,7 @@ func getCount(round, label string, regex *regexp.Regexp) int {
 	return foundVal
 }
 
-func (s Solver2023) Day_02(part int, reader utils.Reader) int {
+func (s Solver) Day_02(part int, reader utils.Reader) int {
 	gameIdReg := regexp.MustCompile("Game [0-9]+")
 	redRegex := regexp.MustCompile("[0-9]+ red")
 	greenRegex := regexp.MustCompile("[0-9]+ green")

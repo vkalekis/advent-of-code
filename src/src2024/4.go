@@ -53,7 +53,7 @@ func conv2DXMASWorker(inCh <-chan utils.Grid, outCh chan int) {
 	outCh <- count
 }
 
-func (s *Solver2024) Day_04(part int, reader utils.Reader) int {
+func (s *Solver) Day_04(part int, reader utils.Reader) int {
 	var a utils.Grid
 
 	for line := range reader.Stream() {

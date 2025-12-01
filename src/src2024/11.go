@@ -53,7 +53,7 @@ func blinkMap(stones map[stone]int) map[stone]int {
 
 	return newIteration
 }
-func (s *Solver2024) Day_11(part int, reader utils.Reader) int {
+func (s *Solver) Day_11(part int, reader utils.Reader) int {
 
 	stones := make([]stone, 0)
 	for line := range reader.Stream() {

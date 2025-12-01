@@ -397,7 +397,7 @@ func loc(visitedCoords map[string]*node10, row, col, maxRows, maxCols int) (int,
 	return count1, count2
 }
 
-func (s Solver2023) Day_10(part int, reader utils.Reader) int {
+func (s Solver) Day_10(part int, reader utils.Reader) int {
 
 	lines := make(map[int][]string)
 	lineInd := 0

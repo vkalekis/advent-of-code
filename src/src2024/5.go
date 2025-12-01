@@ -72,7 +72,7 @@ func (u update) isInOrder(rules rules) bool {
 	return true
 }
 
-func (s *Solver2024) Day_05(part int, reader utils.Reader) int {
+func (s *Solver) Day_05(part int, reader utils.Reader) int {
 
 	updates, rules := constructUpdatesAndRules(reader)
 

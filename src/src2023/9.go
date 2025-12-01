@@ -81,7 +81,7 @@ func find_prevvalue(nums []int) int {
 	return levels[0][0]
 }
 
-func (s Solver2023) Day_09(part int, reader utils.Reader) int {
+func (s Solver) Day_09(part int, reader utils.Reader) int {
 
 	nextValues := 0
 

@@ -118,7 +118,7 @@ func getGuardPath(grid [][]string, guardCoords utils.Coordinates, dir int) []uti
 	return visited
 }
 
-func (s *Solver2024) Day_06(part int, reader utils.Reader) int {
+func (s *Solver) Day_06(part int, reader utils.Reader) int {
 
 	var grid [][]string
 

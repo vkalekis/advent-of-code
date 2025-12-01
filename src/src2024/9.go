@@ -157,7 +157,7 @@ func findDiskChecksum(d []fileBlock) int {
 	return checkSum
 }
 
-func (s *Solver2024) Day_09(part int, reader utils.Reader) int {
+func (s *Solver) Day_09(part int, reader utils.Reader) int {
 
 	var disk disk
 	for line := range reader.Stream() {

@@ -21,7 +21,7 @@ func findAllAntennaPairs(antennas []utils.Coordinates) [][2]utils.Coordinates {
 	return pairs
 }
 
-func (s *Solver2024) Day_08(part int, reader utils.Reader) int {
+func (s *Solver) Day_08(part int, reader utils.Reader) int {
 
 	antennas := make(map[string][]utils.Coordinates)
 	var grid [][]string

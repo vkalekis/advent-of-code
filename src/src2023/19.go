@@ -181,7 +181,7 @@ func mergeIntervals(intervals []interval) []interval {
 	return merged
 }
 
-func (s Solver2023) Day_19(p int, reader utils.Reader) int {
+func (s Solver) Day_19(p int, reader utils.Reader) int {
 
 	workflows, parts := parseLines(reader)
 

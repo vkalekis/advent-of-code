@@ -8,11 +8,15 @@ import (
 	"github.com/vkalekis/advent-of-code/pkg/utils"
 	"github.com/vkalekis/advent-of-code/src/src2023"
 	"github.com/vkalekis/advent-of-code/src/src2024"
+	"github.com/vkalekis/advent-of-code/src/src2025"
 )
 
-var available_days map[string]utils.Solution
-var solver2023 src2023.Solver2023
-var solver2024 src2024.Solver2024
+var availableDays map[string]utils.Solution
+var solver2023 src2023.Solver
+var solver2024 src2024.Solver
+var solver2025 src2025.Solver
+
+var availableYears = []int{2023, 2024, 2025}
 
 func main() {
 
@@ -25,18 +29,19 @@ func main() {
 	flag.Parse()
 
 	if err := checkArgs(*year, *day, *part, *level); err != nil {
-		fmt.Println("Error during parsing of args: %v", err)
+		fmt.Printf("Error during parsing of args: %v", err)
 		return
 	}
 
 	_ = logger.NewLogger(*level)
 
-	solver2023 = src2023.NewSolver2023()
-	solver2024 = src2024.NewSolver2024()
+	solver2023 = src2023.NewSolver()
+	solver2024 = src2024.NewSolver()
+	solver2025 = src2025.NewSolver()
 
 	initDaysMap()
 
-	solver := utils.NewSolver(*year, *day, *part, *filepath, *example, available_days)
+	solver := utils.NewSolver(*year, *day, *part, *filepath, *example, availableDays)
 
 	if err := solver.Solve(); err != nil {
 		logger.Errorf("Error during solving: %v", err)
@@ -45,7 +50,17 @@ func main() {
 }
 
 func checkArgs(year, day, part int, level string) error {
-	if year != 2023 && year != 2024 {
+	checkYear := func() (found bool) {
+		for i := range availableYears {
+			if availableYears[i] == year {
+				found = true
+				return
+			}
+		}
+		return
+	}()
+
+	if !checkYear {
 		return fmt.Errorf("provided year %d is not valid", year)
 	}
 	if day < 0 {
@@ -61,7 +76,7 @@ func checkArgs(year, day, part int, level string) error {
 }
 
 func initDaysMap() {
-	available_days = map[string]utils.Solution{
+	availableDays = map[string]utils.Solution{
 		"2023_01": solver2023.Day_01,
 		"2023_02": solver2023.Day_02,
 		"2023_03": solver2023.Day_03,
@@ -95,5 +110,7 @@ func initDaysMap() {
 		"2024_12": solver2024.Day_12,
 		"2024_13": solver2024.Day_13,
 		"2024_14": solver2024.Day_14,
+		// ---
+		"2025_01": solver2025.Day_01,
 	}
 }

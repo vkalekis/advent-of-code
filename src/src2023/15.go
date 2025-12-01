@@ -35,7 +35,7 @@ func extractValues(r *regexp.Regexp, s string) (string, string, int) {
 	return symbols, op, -1
 }
 
-func (s Solver2023) Day_15(part int, reader utils.Reader) int {
+func (s Solver) Day_15(part int, reader utils.Reader) int {
 
 	var currentValue int32
 	var sumCurrentValues int32

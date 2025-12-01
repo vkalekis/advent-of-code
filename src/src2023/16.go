@@ -155,7 +155,7 @@ func deepCopy(grid map[int][]string) map[int][]string {
 	return copyGrid
 }
 
-func (s Solver2023) Day_16(part int, reader utils.Reader) int {
+func (s Solver) Day_16(part int, reader utils.Reader) int {
 
 	grid := make(map[int][]string)
 

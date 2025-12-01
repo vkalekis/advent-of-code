@@ -8,7 +8,7 @@ import (
 	"github.com/vkalekis/advent-of-code/pkg/utils"
 )
 
-func (s *Solver2023) Day_01(part int, reader utils.Reader) int {
+func (s *Solver) Day_01(part int, reader utils.Reader) int {
 
 	var sum int
 	numsMap := map[string]string{

@@ -186,7 +186,7 @@ func naive_way(lines map[int][]string, maxRows, maxCols int, expansionRate int) 
 	return totalDist / 2
 }
 
-func (s Solver2023) Day_11(part int, reader utils.Reader) int {
+func (s Solver) Day_11(part int, reader utils.Reader) int {
 
 	lines := make(map[int][]string)
 	lineInd := 0

@@ -245,7 +245,7 @@ func pushButton(components map[string]component, b broadcaster) (int, int) {
 	return lowPulses, highPulses
 }
 
-func (s Solver2023) Day_20(part int, reader utils.Reader) int {
+func (s Solver) Day_20(part int, reader utils.Reader) int {
 
 	b, components := parseLines20(reader)
 

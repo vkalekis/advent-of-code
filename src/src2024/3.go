@@ -28,7 +28,7 @@ func calculateTotal(line string) int {
 	return total
 }
 
-func (s *Solver2024) Day_03(part int, reader utils.Reader) int {
+func (s *Solver) Day_03(part int, reader utils.Reader) int {
 
 	var longLine string
 

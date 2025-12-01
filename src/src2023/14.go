@@ -114,7 +114,7 @@ func printGrid(grid map[int]map[utils.Coordinates]string, maxRows, maxCols int) 
 	return rowS
 }
 
-func (s Solver2023) Day_14(part int, reader utils.Reader) int {
+func (s Solver) Day_14(part int, reader utils.Reader) int {
 	row := 0
 
 	grid := make(map[int]map[utils.Coordinates]string)

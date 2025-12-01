@@ -41,7 +41,7 @@ func smartSolveRace(r race) int {
 	return sol1 - sol2 + 1
 }
 
-func (s Solver2023) Day_06(part int, reader utils.Reader) int {
+func (s Solver) Day_06(part int, reader utils.Reader) int {
 
 	switch part {
 	case 1:

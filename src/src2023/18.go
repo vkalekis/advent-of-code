@@ -65,7 +65,7 @@ func traverseLagoon(lines []line16) int {
 	return int(0.5*float64(area) + 0.5*float64(boundaries) + 1)
 }
 
-func (s Solver2023) Day_18(part int, reader utils.Reader) int {
+func (s Solver) Day_18(part int, reader utils.Reader) int {
 
 	lines := make([]line16, 0)
 

@@ -36,7 +36,7 @@ func findConnectedRegions(g utils.Grid) map[utils.Coordinates][]utils.Coordinate
 	return regions
 }
 
-func (s *Solver2024) Day_12(part int, reader utils.Reader) int {
+func (s *Solver) Day_12(part int, reader utils.Reader) int {
 
 	grid := utils.GenerateGrid(reader)
 	regions := findConnectedRegions(grid)

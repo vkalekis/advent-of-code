@@ -158,7 +158,7 @@ func (g *robotGrid) findConnectedElements() int {
 	return maxConnectedComponents
 }
 
-func (s *Solver2024) Day_14(part int, reader utils.Reader) int {
+func (s *Solver) Day_14(part int, reader utils.Reader) int {
 
 	// g := constructRobotsGrid(reader, 7, 11)
 	g := constructRobotsGrid(reader, 103, 101)

@@ -13,7 +13,7 @@ type node struct {
 	label string
 }
 
-func (s Solver2023) Day_08(part int, reader utils.Reader) int {
+func (s Solver) Day_08(part int, reader utils.Reader) int {
 
 	directions := ""
 	nodesMap := make(map[string]node)

@@ -60,7 +60,7 @@ func locatePositions(reader utils.Reader, numReg, symbReg *regexp.Regexp) ([]Num
 	return numbers, symbols
 }
 
-func (s Solver2023) Day_03(part int, reader utils.Reader) int {
+func (s Solver) Day_03(part int, reader utils.Reader) int {
 
 	numReg := regexp.MustCompile(`[0-9]+`)
 	symbReg := regexp.MustCompile(`[^\w\s.]`)
