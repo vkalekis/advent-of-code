@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -49,4 +50,28 @@ func ToInt(s string) int {
 		logger.Fatalf("error during parsing %s: %v", s, err)
 	}
 	return v
+}
+
+// inefficient!
+func CeilingDivision(a, b int) int {
+	div := a / b
+	if a%b != 0 {
+		return div + 1
+	}
+	return div
+}
+
+// inefficient!
+func FindFactors(n int) []int {
+	factors := make([]int, 0)
+	for i := 1; i*i <= n; i++ {
+		if n%i == 0 {
+			factors = append(factors, i)
+			if i != n/i {
+				factors = append(factors, n/i)
+			}
+		}
+	}
+	slices.Sort(factors)
+	return factors
 }
