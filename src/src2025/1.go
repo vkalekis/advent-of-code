@@ -26,6 +26,10 @@ func newSafe(currnent, max int) *safe {
 }
 
 func (s *safe) turn(instruction string) {
+	if len(instruction) < 2 {
+		return
+	}
+
 	var dir string
 	var steps int
 
@@ -38,42 +42,42 @@ func (s *safe) turn(instruction string) {
 		return
 	}
 
+	var delta int
 	switch dir {
 	case left:
-		s.current -= steps
-
-		// if the current is negative or zero, then we have crossed zero (most probably!)
-		if s.current <= 0 {
-			s.zeroPasses += -s.current/s.max + 1
-
-			// and we reset
-			//  5 + L10 ->  -5 ->  -5 + 100 = 95
-			// and we need to do it -s.current/s.max + 1 times to wrap around to the positives
-			// -257 -> we must loop (2+1) = 3 times   ( 2 = 257 div 100)
-
-			// (!) but if we started at 0, we double count one transition
-			// 0 + L10 -> -10 -> 10 div 100 + 1 = 1 where as we didn't do any transitions
-			if s.current+steps == 0 {
-				s.zeroPasses--
-			}
-
-			s.current += s.max * (-s.current/s.max + 1)
-			s.current = s.current % s.max
-
-		}
-
+		delta = -steps
 	case right:
-		s.current += steps
-		// if the current is over max, then we have crossed zero...
-		if s.current >= s.max {
-			// ...as many times as the div...
-			// 50 + 5001 = 5501 -> we have crossed it 5501 div 100 = 55 times (!)
-			s.zeroPasses += s.current / s.max
-		}
-		// ...and we reset
-		// 98 + R10 -> 108 -> 108 % 100 = 8
-		s.current = s.current % s.max
+		delta = steps
 	}
+
+	new := s.current + delta
+
+	// -400    -300    -200    -100    0    100    200    300
+	//					                  |
+	//                       Start is always here
+	//                                                251
+	//                                                251/100 -> 2 we have crossed 0 two times (100,200)
+	//      -330
+	//      -330/100 -> 3 WRONG! we have crossed 0 4 times (0,-100,-200,-300)
+	//        we need to do floor
+	//       (-330-100)/100 -> (330+100)/100 -> 4
+	//
+	// edge case when we start at 0 and loop left:
+	//  0 -> -20  -> zeropasses = (20+100)/100 = 1 whereas we didn't do any passes
+
+	switch dir {
+	case left:
+		s.zeroPasses += (-new + s.max) / s.max
+		if s.current == 0 {
+			s.zeroPasses--
+		}
+	case right:
+		s.zeroPasses += new / s.max
+	}
+
+	//  251 % 100 -> (251+100) % 100 = 51 anyway
+	// -330 % 100 = -30 X  -> -30+100 = 70 % 100 = 70
+	s.current = (new%s.max + s.max) % s.max
 
 	if s.current == 0 {
 		s.zeroStops++

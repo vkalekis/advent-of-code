@@ -140,6 +140,15 @@ func Test_Safe_Turn(t *testing.T) {
 			wantZeroStops:  0,
 			wantZeroPasses: 0,
 		},
+		{
+			name:           "arrived at exact multiple",
+			instruction:    "L220",
+			current:        20,
+			max:            100,
+			wantCurrent:    0,
+			wantZeroStops:  1,
+			wantZeroPasses: 3,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
