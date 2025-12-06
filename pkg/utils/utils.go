@@ -75,3 +75,18 @@ func FindFactors(n int) []int {
 	slices.Sort(factors)
 	return factors
 }
+
+func MaxWithIndex(arr []int) (max int, idx int) {
+	if len(arr) == 0 {
+		return -1, -1
+	}
+	max = arr[0]
+	idx = 0
+	for i := range arr {
+		if arr[i] > max {
+			max = arr[i]
+			idx = i
+		}
+	}
+	return
+}
