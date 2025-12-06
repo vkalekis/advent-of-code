@@ -14,6 +14,10 @@ func StandardizeSpaces(s string) string {
 	return strings.Join(strings.Fields(s), " ")
 }
 
+func Clean(s string) string {
+	return strings.Join(strings.Fields(s), "")
+}
+
 func WriteMapToFile(data map[string]interface{}, filename string) error {
 
 	jsonData, err := json.MarshalIndent(data, "", "  ")
@@ -31,6 +35,13 @@ func WriteMapToFile(data map[string]interface{}, filename string) error {
 
 func Min(a, b int) int {
 	if a < b {
+		return a
+	}
+	return b
+}
+
+func Max(a, b int) int {
+	if a > b {
 		return a
 	}
 	return b

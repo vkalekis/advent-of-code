@@ -10,10 +10,6 @@ import (
 	"github.com/vkalekis/advent-of-code/pkg/utils"
 )
 
-type idRange struct {
-	min, max, minLength, maxLength int
-}
-
 type repeatedBlockReq struct {
 	blockSize, blocks int
 }
@@ -52,7 +48,7 @@ func generateRepeated(ctx context.Context, req repeatedBlockReq) chan int {
 }
 
 func (s *Solver) Day_02(part int, reader utils.Reader) int {
-	idRanges := make([]idRange, 0)
+	idRanges := make([]utils.IdRange, 0)
 
 	for line := range reader.Stream() {
 		ranges := strings.Split(line, ",")
@@ -64,11 +60,11 @@ func (s *Solver) Day_02(part int, reader utils.Reader) int {
 
 			a := utils.ToInt(parts[0])
 			b := utils.ToInt(parts[1])
-			idRanges = append(idRanges, idRange{
-				min:       a,
-				max:       b,
-				minLength: len(parts[0]),
-				maxLength: len(parts[1]),
+			idRanges = append(idRanges, utils.IdRange{
+				Min:       a,
+				Max:       b,
+				MinLength: len(parts[0]),
+				MaxLength: len(parts[1]),
 			})
 		}
 	}
@@ -83,11 +79,11 @@ func (s *Solver) Day_02(part int, reader utils.Reader) int {
 
 		switch part {
 		case 1:
-			logger.Debugf("Id range: %+v %d %d", idRange, utils.CeilingDivision(idRange.minLength, 2), utils.CeilingDivision(idRange.maxLength, 2))
+			logger.Debugf("Id range: %+v %d %d", idRange, utils.CeilingDivision(idRange.MinLength, 2), utils.CeilingDivision(idRange.MaxLength, 2))
 
 			// - find the number of digits in min and max
 			// - do ceiling division by 2 for both to find the number size that needs to be duplicated/repeated
-			for i := utils.CeilingDivision(idRange.minLength, 2); i <= utils.CeilingDivision(idRange.maxLength, 2); i++ {
+			for i := utils.CeilingDivision(idRange.MinLength, 2); i <= utils.CeilingDivision(idRange.MaxLength, 2); i++ {
 				// we want 2 blocks of i size
 				// eg. received number 222233 -> ceilingDiv = 3 so we target 2 blocks of size 3
 				// 4 blocks of 4/2=2 -> o
@@ -98,7 +94,7 @@ func (s *Solver) Day_02(part int, reader utils.Reader) int {
 			}
 
 		case 2:
-			// logger.Debugf("Id range: %+v %v %v", idRange, utils.FindFactors(idRange.minLength), utils.FindFactors(idRange.maxLength))
+			// logger.Debugf("Id range: %+v %v %v", idRange, utils.FindFactors(idRange.MinLength), utils.FindFactors(idRange.MaxLength))
 
 			// The factor defines the block size and the original number is used to calculate how many blocks should be generated.
 			// eg. if the number is 10, we can generate:
@@ -106,25 +102,25 @@ func (s *Solver) Day_02(part int, reader utils.Reader) int {
 			//  - 5 blocks of size 2
 			//  - 2 blocks of size 5
 			// X  1 block of size 10 X (we want repeated)
-			for _, f := range utils.FindFactors(idRange.minLength) {
-				if f == idRange.minLength {
+			for _, f := range utils.FindFactors(idRange.MinLength) {
+				if f == idRange.MinLength {
 					continue
 				}
 				reqs = append(reqs, repeatedBlockReq{
 					blockSize: f,
-					blocks:    idRange.minLength / f,
+					blocks:    idRange.MinLength / f,
 				})
 			}
 
 			// If the lengths of the two ranges are different, we have to consider all cases.
-			if idRange.minLength != idRange.maxLength {
-				for _, f := range utils.FindFactors(idRange.maxLength) {
-					if f == idRange.maxLength {
+			if idRange.MinLength != idRange.MaxLength {
+				for _, f := range utils.FindFactors(idRange.MaxLength) {
+					if f == idRange.MaxLength {
 						continue
 					}
 					reqs = append(reqs, repeatedBlockReq{
 						blockSize: f,
-						blocks:    idRange.maxLength / f,
+						blocks:    idRange.MaxLength / f,
 					})
 				}
 			}
@@ -140,7 +136,7 @@ func (s *Solver) Day_02(part int, reader utils.Reader) int {
 			// Generate repeated blocks of a fixed size
 			ch := generateRepeated(context.Background(), req)
 			for id := range ch {
-				if id >= idRange.min && id <= idRange.max {
+				if id >= idRange.Min && id <= idRange.Max {
 					logger.Debugf("(temp) invalid id: %d", id)
 					uniqueIds[id] = struct{}{}
 				}
