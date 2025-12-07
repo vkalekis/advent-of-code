@@ -13,7 +13,7 @@ func findConnectedRegions(g utils.Grid) map[utils.Coordinates][]utils.Coordinate
 	dfs = func(g utils.Grid, cur utils.Coordinates, region *[]utils.Coordinates) {
 		visited[cur] = true
 		*region = append(*region, cur)
-		for _, n := range cur.GetNeighbors(len(g), len(g[0])) {
+		for _, n := range cur.GetNeighbors(len(g), len(g[0]), true) {
 			if !visited[n] && g[cur.Row][cur.Col] == g[n.Row][n.Col] {
 				dfs(g, n, region)
 			}
@@ -53,7 +53,7 @@ func (s *Solver) Day_12(part int, reader utils.Reader) int {
 		//     |
 		perimeter := 0
 		for _, regionCoord := range regionCoords {
-			neighbors := regionCoord.GetNeighbors(len(grid), len(grid[0]))
+			neighbors := regionCoord.GetNeighbors(len(grid), len(grid[0]), true)
 			// logger.Infof("Plant: %s Neighbors: %d", plant, neighbors)
 			// if the tile is an edge tile, the neighbors will be <4 but the edges are considered perimeter
 			perimeter += 4 - len(neighbors)

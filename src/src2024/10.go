@@ -23,7 +23,7 @@ func generateGraph(grid [][]string) graph {
 				height: utils.ToInt(grid[row][col]),
 			}
 			g[n] = make([]node, 0)
-			for _, nn := range c.GetNeighbors(len(grid), len(grid[0])) {
+			for _, nn := range c.GetNeighbors(len(grid), len(grid[0]), true) {
 				g[n] = append(g[n], node{
 					c:      nn,
 					height: utils.ToInt(grid[nn.Row][nn.Col]),

@@ -107,7 +107,7 @@ func floodfill(lines map[int][]string, start utils.Coordinates, maxRows, maxCols
 			break
 		}
 
-		neighbors := n.coords.GetNeighbors(maxRows, maxCols)
+		neighbors := n.coords.GetNeighbors(maxRows, maxCols, true)
 
 		for _, neighbor := range neighbors {
 			if _, ok := visitedNodes[neighbor]; ok {

@@ -36,7 +36,7 @@ func (c Coordinates) IsValid(maxRows, maxCols int) bool {
 	return true
 }
 
-func (c Coordinates) GetNeighbors(maxRows, maxCols int) []Coordinates {
+func (c Coordinates) GetNeighbors(maxRows, maxCols int, onlyCardinal bool) []Coordinates {
 	neighbors := make([]Coordinates, 0)
 	if !c.IsValid(maxRows, maxCols) {
 		return neighbors
@@ -65,6 +65,33 @@ func (c Coordinates) GetNeighbors(maxRows, maxCols int) []Coordinates {
 			Row: c.Row,
 			Col: c.Col + 1,
 		})
+	}
+
+	if !onlyCardinal {
+		if c.Row > 0 && c.Col > 0 {
+			neighbors = append(neighbors, Coordinates{
+				Row: c.Row - 1,
+				Col: c.Col - 1,
+			})
+		}
+		if c.Row > 0 && c.Col < maxCols-1 {
+			neighbors = append(neighbors, Coordinates{
+				Row: c.Row - 1,
+				Col: c.Col + 1,
+			})
+		}
+		if c.Row < maxRows-1 && c.Col > 0 {
+			neighbors = append(neighbors, Coordinates{
+				Row: c.Row + 1,
+				Col: c.Col - 1,
+			})
+		}
+		if c.Row < maxRows-1 && c.Col < maxCols-1 {
+			neighbors = append(neighbors, Coordinates{
+				Row: c.Row + 1,
+				Col: c.Col + 1,
+			})
+		}
 	}
 
 	return neighbors
